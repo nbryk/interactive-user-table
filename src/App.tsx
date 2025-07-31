@@ -1,21 +1,31 @@
-import React from 'react';
+import { PeoplePage } from './pages/PeoplePage';
+import { Navbar } from './components/Navbar';
+
 import './App.scss';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { HomePage } from './pages/HomePage';
+import { PageNotFound } from './pages/PageNotFound';
 
-interface Props {
-  onClick: () => void;
-  children: React.ReactNode;
-}
-
-export const Provider: React.FC<Props> = React.memo(({ onClick, children }) => (
-  <button type="button" onClick={onClick}>
-    {children}
-  </button>
-));
-
-export const App: React.FC = () => {
+export const App = () => {
   return (
-    <div className="starter">
-      <Provider onClick={() => ({})}>TodoList</Provider>
+    <div data-cy="app">
+      <Navbar />
+
+      <div className="section">
+        <div className="container">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/home" element={<Navigate to="/" replace />} />
+
+            <Route path="/people">
+              <Route index element={<PeoplePage />} />
+              <Route path=":personSlug" element={<PeoplePage />} />
+            </Route>
+
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </div>
+      </div>
     </div>
   );
 };
